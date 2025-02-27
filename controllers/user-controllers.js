@@ -4,7 +4,16 @@ const catchAsync = require("../utils/catchAsync");
 const generateToken = require("../utils/generateToken");
 
 exports.fetchUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find({});
+  const {role} = req.params
+  if (!role) {
+    return next(new AppError("An Expicted Error",400));
+  }
+  let users;
+  if(role === "workers"){
+    users = await User.find({role: "worker"});
+  } else if(role === "employees"){
+    users = await User.find({role: "employer"});
+  }
 
   res.status(200).json({
     status: "success",
@@ -12,6 +21,7 @@ exports.fetchUsers = catchAsync(async (req, res, next) => {
     data: users,
   });
 });
+
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -36,21 +46,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
     birthday,
     gender,
     skills,
-    location
+    location,
+    role
   } = req.body;
-  console.log({
-    email,
-    password,
-    Fname,
-    Lname,
-    phone,
-    birthday,
-    gender,
-    pin,
-    passwordConfirm,
-    skills,
-    location
-  });
+ 
   if (
     !email ||
     !password ||
@@ -76,7 +75,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
     pin,
     passwordConfirm,
     skills,
-    location
+    location,
+    role
   });
   sendToken(req, res, newUser, "signup success");
 });

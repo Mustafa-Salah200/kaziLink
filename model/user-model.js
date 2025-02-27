@@ -44,6 +44,16 @@ const userSchema = new mongoose.Schema({
     },
     select: false,
   },
+  verifyNumber: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  verifyEmail: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   passwordResetToken: {
     type: String,
     required: false,
@@ -66,7 +76,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["worker", "employee", "admin"],
+    enum: ["worker", "employer", "admin"],
     default: "worker",
   },
   pin: {
