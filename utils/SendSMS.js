@@ -8,9 +8,12 @@ const africastalking = AfricasTalking({
 });
 
 module.exports = async (options) => {
+  console.log(options);
   await africastalking.SMS.send({
     to: options.number,
-    message: options.message,
+    message: `
+    id: ${Date.now()}
+    ${options.message}`,
     from: "36689",
   });
 };

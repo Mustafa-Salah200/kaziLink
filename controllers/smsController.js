@@ -34,7 +34,7 @@ exports.sendAirTime = catchAsync(async (req, res, next) => {
   });
 });
 exports.sendOTP = catchAsync(async (req, res, next) => {
-  const number = req.user.phone;
+  const number = req.body.phone;
   const id = req.user.id;
   if (!number) {
     return next(new AppError("Please Provide a Valid Number", 400));
@@ -66,20 +66,20 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
     message: "Sending the otp is successfully",
   });
 });
-
 exports.verifyOTP = catchAsync(async (req, res, next) => {
   const { otp } = req.body;
   const id = req.user.id;
   const user = await User.findById(id);
   console.log(otp, user.otp);
-  if (Date.now() > user.otpExpires && user.otp !== otp) {
+  if (Date.now() > user.otpExpires || user.otp !== otp) {
     return res.status(200).json({
       message: `OTP is Expired, Please Provide a Valid OTP`,
     });
   }
-  user.otp = ""
-  user.otpExpires = ""
-  await user.save({validateBeforeSave:false})
+  user.otp = "";
+  user.otpExpires = "";
+  user.verifyNumber = true;
+  await user.save({ validateBeforeSave: false });
   res.status(200).json({
     message: `The OTP is Valid`,
   });

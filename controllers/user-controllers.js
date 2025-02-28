@@ -11,12 +11,12 @@ exports.fetchUsers = catchAsync(async (req, res, next) => {
   let users;
   if (role === "workers") {
     users = await User.find({ role: "worker" });
-    return sendToken(req,res,users,"success sending data",)
+    return sendToken(req, res, users, "success sending data");
   } else if (role === "employees") {
     users = await User.find({ role: "employer" });
-    return sendToken(req,res,users,"success sending data",)
+    return sendToken(req, res, users, "success sending data");
   }
-  next(new AppError("Couldn't find This path",404))
+  next(new AppError("Couldn't find This path", 404));
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -47,6 +47,20 @@ exports.signUp = catchAsync(async (req, res, next) => {
     location,
     role,
   } = req.body;
+  console.log({
+    email,
+    password,
+    Fname,
+    Lname,
+    phone,
+    pin,
+    passwordConfirm,
+    birthday,
+    gender,
+    skills,
+    location,
+    role,
+  });
 
   if (
     !email ||
@@ -79,13 +93,12 @@ exports.signUp = catchAsync(async (req, res, next) => {
   sendToken(req, res, newUser, "signup success");
 });
 exports.updataUser = catchAsync(async (req, res, next) => {
-
   const id = req.user.id;
   const user = await User.findByIdAndUpdate(id, { ...req.body });
   if (!user) {
     return next(new AppError("Error in Updating The User", 404));
   }
-  const updateUser = await User.findById(id)
+  const updateUser = await User.findById(id);
   sendToken(req, res, updateUser, "updating the user is successful");
 });
 const sendToken = async (req, res, user, message) => {
