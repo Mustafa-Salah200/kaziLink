@@ -34,8 +34,8 @@ const jobSchema = new mongoose.Schema({
     maxlength: [50, "Location must have less or equal than 50 characters"],
     minlength: [2, "Location must have more or equal than 2 characters"],
   },
-  duration: {
-    type: Number,
+  type: {
+    type: String,
     required: true,
   },
   completed: {
@@ -46,6 +46,11 @@ const jobSchema = new mongoose.Schema({
   createdBy: {
     type: String,
     required: true,
+  },
+  workers: {
+    type: [],
+    default: [],
+    required: false,
   },
 });
 const Jobs = mongoose.model("Jobs", jobSchema);

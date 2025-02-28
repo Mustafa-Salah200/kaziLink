@@ -4,30 +4,28 @@ const catchAsync = require("../utils/catchAsync");
 const generateToken = require("../utils/generateToken");
 
 exports.fetchUsers = catchAsync(async (req, res, next) => {
-  const {role} = req.params
+  const { role } = req.params;
   if (!role) {
-    return next(new AppError("An Expicted Error",400));
+    return next(new AppError("An Expicted Error", 400));
   }
   let users;
-  if(role === "workers"){
-    users = await User.find({role: "worker"});
-  } else if(role === "employees"){
-    users = await User.find({role: "employer"});
+  if (role === "workers") {
+    users = await User.find({ role: "worker" });
+    return sendToken(req,res,users,"success sending data",)
+  } else if (role === "employees") {
+    users = await User.find({ role: "employer" });
+    return sendToken(req,res,users,"success sending data",)
   }
-
-  res.status(200).json({
-    status: "success",
-    length: users.length,
-    data: users,
-  });
+  next(new AppError("Couldn't find This path",404))
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { phone, password } = req.body;
+  console.log({ phone, password });
+  if (!phone || !password) {
     return next(new AppError("Invalid email or password"));
   }
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ phone }).select("+password");
   console.log("user: ", user);
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Invalid email or password"));
@@ -47,9 +45,9 @@ exports.signUp = catchAsync(async (req, res, next) => {
     gender,
     skills,
     location,
-    role
+    role,
   } = req.body;
- 
+
   if (
     !email ||
     !password ||
@@ -61,7 +59,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     !birthday ||
     !gender ||
     !location
-   ) {
+  ) {
     return next(new AppError("All fields are required"));
   }
   const newUser = await User.create({
@@ -76,9 +74,19 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordConfirm,
     skills,
     location,
-    role
+    role,
   });
   sendToken(req, res, newUser, "signup success");
+});
+exports.updataUser = catchAsync(async (req, res, next) => {
+
+  const id = req.user.id;
+  const user = await User.findByIdAndUpdate(id, { ...req.body });
+  if (!user) {
+    return next(new AppError("Error in Updating The User", 404));
+  }
+  const updateUser = await User.findById(id)
+  sendToken(req, res, updateUser, "updating the user is successful");
 });
 const sendToken = async (req, res, user, message) => {
   if (!user) {

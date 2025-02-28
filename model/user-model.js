@@ -110,6 +110,31 @@ const userSchema = new mongoose.Schema({
   location:{
     type:String,
     required:true
+  },
+  values:{
+    type: [],
+    required: false,
+    default: []
+  },
+  about:{
+    type: String,
+    required:false,
+    default: ''
+  },
+  feedback:{
+    type: [],
+    required: false,
+    default: []
+  },
+  available:{
+    type: Boolean,
+    required: false,
+    default: true
+  },
+  jobs:{
+    type: [],
+    required: false,
+    default: []
   }
 });
 
