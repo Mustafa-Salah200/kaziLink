@@ -44,7 +44,7 @@ const jobSchema = new mongoose.Schema({
     required: false,
   },
   createdBy: {
-    type: String,
+    type: {},
     required: true,
   },
   workers: {

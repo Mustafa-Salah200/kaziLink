@@ -101,6 +101,28 @@ exports.updataUser = catchAsync(async (req, res, next) => {
   const updateUser = await User.findById(id);
   sendToken(req, res, updateUser, "updating the user is successful");
 });
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const {id} = req.params;
+  console.log(id);
+  const user = await User.findByIdAndDelete(id);
+  if (!user) {
+    return next(new AppError("Error in Deleting The User", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    message: "User deleted successfully",
+  });
+})
+exports.updataOnlyOne = catchAsync(async (req, res, next) => {
+  const {id} = req.params;
+  const user = await User.findByIdAndUpdate(id, { ...req.body });
+  if (!user) {
+    return next(new AppError("Error in Updating The User", 404));
+  }
+  const updateUser = await User.findById(id);
+  sendToken(req, res, updateUser, "updating the user is successful");
+});
+
 const sendToken = async (req, res, user, message) => {
   if (!user) {
     return next(new AppError("User not found", 404));

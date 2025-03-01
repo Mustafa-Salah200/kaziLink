@@ -36,7 +36,11 @@ exports.createJob = catchAsync(async (req, res, next) => {
     endDate,
     type,
     location,
-    createdBy: req.user.id,
+    createdBy:{
+      name:`${ req.user.Fname} ${ req.user.Lname}`,
+      id: `${ req.user.id}`,
+      gender: `${req.user.gender}`
+    },
   });
   await NotificationForUsers();
   res.status(200).json({

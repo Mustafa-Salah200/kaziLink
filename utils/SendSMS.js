@@ -1,7 +1,5 @@
 const AfricasTalking = require("africastalking");
 
-// TODO: Initialize Africa's Talking
-
 const africastalking = AfricasTalking({
   apiKey: process.env.AFRICA_API_KEY,
   username: process.env.AFRICA_API_USER,

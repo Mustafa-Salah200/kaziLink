@@ -52,25 +52,27 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
         number,
         message: `Your OTP is : ${otp} \n it's valid for 5 min`,
       });
+
+      return res.status(200).json({
+        status: "success",
+        message: "Sending the otp is successfully",
+      });
     } catch (err) {
-      return next(
-        new AppError(
-          `There is an Error in Sending the Otp to Your Number : ${number}`,
-          400
-        )
-      );
+      return res.status(200).json({
+        status: "success",
+        message: `There is an Error in Sending the Otp to Your Number : ${number}`,
+      });
     }
   }
-  res.status(200).json({
-    status: "success",
-    message: "Sending the otp is successfully",
-  });
 });
 exports.verifyOTP = catchAsync(async (req, res, next) => {
   const { otp } = req.body;
   const id = req.user.id;
   const user = await User.findById(id);
   console.log(otp, user.otp);
+  if(Date.now() > user.otpExpires){
+    console.log("expires");
+  }
   if (Date.now() > user.otpExpires || user.otp !== otp) {
     return res.status(200).json({
       message: `OTP is Expired, Please Provide a Valid OTP`,
