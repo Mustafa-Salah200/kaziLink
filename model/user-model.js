@@ -101,41 +101,46 @@ const userSchema = new mongoose.Schema({
   skills: {
     type: [],
     required: false,
-    default: []
+    default: [],
   },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
-  location:{
-    type:String,
-    required:true
-  },
-  values:{
-    type: [],
-    required: false,
-    default: []
-  },
-  about:{
+  location: {
     type: String,
-    required:false,
-    default: ''
+    required: true,
   },
-  feedback:{
+  values: {
     type: [],
     required: false,
-    default: []
+    default: [],
   },
-  available:{
+  about: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  feedback: {
+    type: [],
+    required: false,
+    default: [],
+  },
+  available: {
     type: Boolean,
     required: false,
-    default: true
+    default: true,
   },
-  jobs:{
+  jobs: {
     type: [],
     required: false,
-    default: []
-  }
+    default: [],
+  },
+  images: {
+    type: [],
+    rquire: false,
+    default: [],
+  },
 });
 
 userSchema.pre("save", async function (next) {
