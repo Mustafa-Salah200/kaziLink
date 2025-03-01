@@ -14,7 +14,11 @@ const jobRouter = require("./routes/jobRoute");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/jobs", jobRouter);
@@ -56,13 +60,11 @@ app.post("/api/v1/upload/:userId", upload.single("file"), (req, res) => {
         uniqueName: req.file.filename,
         filePath: req.file.path,
       };
-      res
-        .status(200)
-        .json({
-          status: "success",
-          message: "Image uploaded successfully",
-          data: fileInfo,
-        });
+      res.status(200).json({
+        status: "success",
+        message: "Image uploaded successfully",
+        data: fileInfo,
+      });
     } else {
       res.status(400).json({ error: "No image uploaded" });
     }
